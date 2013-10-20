@@ -1,8 +1,11 @@
 require "thor"
 require "stock_quote"
+require "stock_quote_cli/quote"
 
 module StockQuoteCLI
 	class CLI < Thor
+		include StockQuoteCLI::Quote
+
 		desc "last SYMBOL [SYMBOL...]", "get LAST stock price for SYMBOL"
 		def last(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
@@ -45,7 +48,7 @@ module StockQuoteCLI
 			puts
 			stocks.each do |stock|
 				if stock.response_code == 200
-					puts "#{stock.company.green}: $#{stock.send(method_name)}"
+					puts "#{stock.company.green.rjust(40)}: $#{stock.send(method_name)}"
 				else
 					puts bad_symbol_message(stock.symbol)
 				end
@@ -53,29 +56,8 @@ module StockQuoteCLI
 			puts
 		end
 
-		def stocks(symbol, symbols)
-			symbol_string = symbol_string(symbol, symbols)
-			get_stocks(symbol_string)
-		end
-
-		def symbol_string(symbol, symbols)
-			symbols.unshift(symbol).join(", ")
-		end
-
-		def get_stocks(symbol_string)
-			[] + StockQuote::Stock.quote(symbol_string)
-		end
-
 		def bad_symbol_message(symbol)
-			"No data available for #{symbol}.".red
-		end
-	end
-
-	class StockQuote::Stock
-		private
-
-		def to_ary
-			[] << self
+			"No data available for #{symbol}".red.rjust(45)
 		end
 	end
 end
