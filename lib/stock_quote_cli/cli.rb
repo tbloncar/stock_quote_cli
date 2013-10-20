@@ -6,28 +6,50 @@ module StockQuoteCLI
 		desc "last SYMBOL [SYMBOL...]", "get LAST stock price for SYMBOL"
 		def last(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			stocks.each { |stock| puts "#{stock.company}: $#{stock.high}" }
+			output_messages(stocks, :last)
 		end
 
 		desc "high SYMBOL [SYMBOL...]", "get HIGH stock price for SYMBOL"
 		def high(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			stocks.each { |stock| puts "#{stock.company}: $#{stock.high}" }
+			output_messages(stocks, :high)
 		end
 
 		desc "low SYMBOL [SYMBOL...]", "get LOW stock price for SYMBOL"
 		def low(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			stocks.each { |stock| puts "#{stock.company}: $#{stock.low}" }
+			output_messages(stocks, :low)
 		end
 
 		desc "change SYMBOL [SYMBOL...]", "get CHANGE in stock price for SYMBOL"
 		def change(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			stocks.each { |stock| puts "#{stock.company}: $#{stock.change}" }
+			output_messages(stocks, :change)
+		end
+
+		desc "open SYMBOL [SYMBOL...]", "get OPEN stock price for SYMBOL"
+		def open(symbol, *symbols)
+			stocks = stocks(symbol, symbols)
+			output_messages(stocks, :open)
+		end
+
+		desc "yclose SYMBOL [SYMBOL...]", "get yesterday's closing (YCLOSE) stock price for SYMBOL"
+		def yclose(symbol, *symbols)
+			stocks = stocks(symbol, symbols)
+			output_messages(stocks, :y_close)
 		end
 
 		private
+
+		def output_messages(stocks, method_name)
+			stocks.each do |stock|
+				if stock.response_code == 200
+					puts "#{stock.company}: $#{stock.send(method_name)}"
+				else
+					puts bad_symbol_message(stock.symbol)
+				end
+			end
+		end
 
 		def stocks(symbol, symbols)
 			symbol_string = symbol_string(symbol, symbols)
@@ -40,6 +62,10 @@ module StockQuoteCLI
 
 		def get_stocks(symbol_string)
 			[] + StockQuote::Stock.quote(symbol_string)
+		end
+
+		def bad_symbol_message(symbol)
+			"No data available for #{symbol}."
 		end
 	end
 
