@@ -1,6 +1,8 @@
 Stock Quote CLI
 ===============
 
+[![Build Status](https://travis-ci.org/tbloncar/stock_quote_cli.png?branch=master)](https://travis-ci.org/tbloncar/stock_quote_cli)
+
 Description
 -----------
 
