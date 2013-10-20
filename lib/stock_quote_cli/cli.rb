@@ -42,13 +42,15 @@ module StockQuoteCLI
 		private
 
 		def output_messages(stocks, method_name)
+			puts
 			stocks.each do |stock|
 				if stock.response_code == 200
-					puts "#{stock.company}: $#{stock.send(method_name)}"
+					puts "#{stock.company.green}: $#{stock.send(method_name)}"
 				else
 					puts bad_symbol_message(stock.symbol)
 				end
 			end
+			puts
 		end
 
 		def stocks(symbol, symbols)
@@ -65,7 +67,7 @@ module StockQuoteCLI
 		end
 
 		def bad_symbol_message(symbol)
-			"No data available for #{symbol}."
+			"No data available for #{symbol}.".red
 		end
 	end
 
