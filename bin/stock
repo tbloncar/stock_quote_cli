@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require "stock_quote_cli"
 
 StockQuoteCLI::CLI.start(ARGV)
