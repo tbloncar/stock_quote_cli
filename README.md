@@ -19,31 +19,31 @@ Usage Details
 
 You can use Stock Quote CLI to fetch real-time attributes of multiple stocks. Use the `stock` command in tandem with any of the available subcommands and stock symbols to fetch the relevant attribute(s).
 
-### Last Price
+#### Last Price
 
 Get the latest price for the specified stock(s).
 
 	stock last goog yhoo aapl
 
-### Open Price
+#### Open Price
 
 Get the opening price for the specified stock(s) on the current day (or last trading day).
 
 	stock open znga
 
-### Yesterday's Closing Price
+#### Yesterday's Closing Price
 
 Get the closing price for the specified stock(s) on the previous day (or last trading day).
 
 	stock yclose amzn nflx
 
-### High Price
+#### High Price
 
 Get the high price for the specified stock(s) on the current day (or last trading day).
 
 	stock high lnkd
 
-### Low Price
+#### Low Price
 
 Get the low price for the specified stock(s) on the current day (or last trading day).
 
