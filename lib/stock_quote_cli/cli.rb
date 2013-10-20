@@ -57,7 +57,7 @@ module StockQuoteCLI
 		end
 
 		def bad_symbol_message(symbol)
-			"No data available for #{symbol}".red.rjust(45)
+			"#{'No data available for:'.rjust(28)} #{symbol}".red
 		end
 	end
 end
