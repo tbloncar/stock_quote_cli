@@ -1,0 +1,1 @@
+require "stock_quote_cli/cli"
