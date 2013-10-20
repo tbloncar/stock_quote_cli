@@ -3,21 +3,17 @@ Stock Quote CLI
 
 [![Build Status](https://travis-ci.org/tbloncar/stock_quote_cli.png?branch=master)](https://travis-ci.org/tbloncar/stock_quote_cli)
 
-Description
------------
+### Description
 
 Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Google. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
 
-Installation
-------------
+### Installation
 
 Not yet available; but eventually:
 
 	gem install stock_quote_cli
 
-
-Usage Details
--------------
+### Usage Details
 
 You can use Stock Quote CLI to fetch real-time attributes of multiple stocks. Use the `stock` command in tandem with any of the available subcommands and stock symbols to fetch the relevant attribute(s).
 
@@ -51,9 +47,8 @@ Get the low price for the specified stock(s) on the current day (or last trading
 
 	stock low msft dell
 
+### License
 
-License
--------------
 MIT
 
 
