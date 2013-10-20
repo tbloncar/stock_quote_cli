@@ -80,24 +80,24 @@ module StockQuoteCLI
 			"#{'No data available for:'.rjust(28)} #{symbol}".red
 		end
 	end
+end
 
-	class Float
-		def number_with_commas
-			split_on_dot = to_s.split("\.")
-			whole = split_on_dot[0]
-			decimal = split_on_dot[1] || ""
-			char_array = whole.reverse.split(//)
-			whole_with_commas = char_array.each_with_index.map do |char, i|
-				if char_array.size > 3 && i % 3 == 0 && i > 0
-					"#{char},"
-				else
-					char
-				end
-			end.reverse.join("")
-			if decimal.size == 1
-				decimal = "#{decimal}0"
+class Float
+	def number_with_commas
+		split_on_dot = to_s.split("\.")
+		whole = split_on_dot[0]
+		decimal = split_on_dot[1] || ""
+		char_array = whole.reverse.split(//)
+		whole_with_commas = char_array.each_with_index.map do |char, i|
+			if char_array.size > 3 && i % 3 == 0 && i > 0
+				"#{char},"
+			else
+				char
 			end
-			"#{whole_with_commas}.#{decimal}"
+		end.reverse.join("")
+		if decimal.size == 1
+			decimal = "#{decimal}0"
 		end
+		"#{whole_with_commas}.#{decimal}"
 	end
 end
