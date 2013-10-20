@@ -65,9 +65,9 @@ module StockQuoteCLI
 			stocks.each do |stock|
 				if stock.response_code == 200
 					unless method_name == :volume
-						puts "#{stock.company.green.rjust(40)}: $#{stock.send(method_name)}"
+						puts "#{stock.company.green.rjust(40)}: $#{stock.send(method_name).number_with_commas}"
 					else
-						puts "#{stock.company.green.rjust(40)}: #{stock.send(method_name)} shares"
+						puts "#{stock.company.green.rjust(40)}: #{stock.send(method_name).number_with_commas} shares"
 					end
 				else
 					puts bad_symbol_message(stock.symbol)
@@ -78,6 +78,26 @@ module StockQuoteCLI
 
 		def bad_symbol_message(symbol)
 			"#{'No data available for:'.rjust(28)} #{symbol}".red
+		end
+	end
+
+	class Float
+		def number_with_commas
+			split_on_dot = to_s.split("\.")
+			whole = split_on_dot[0]
+			decimal = split_on_dot[1] || ""
+			char_array = whole.reverse.split(//)
+			whole_with_commas = char_array.each_with_index.map do |char, i|
+				if char_array.size > 3 && i % 3 == 0 && i > 0
+					"#{char},"
+				else
+					char
+				end
+			end.reverse.join("")
+			if decimal.size == 1
+				decimal = "#{decimal}0"
+			end
+			"#{whole_with_commas}.#{decimal}"
 		end
 	end
 end
