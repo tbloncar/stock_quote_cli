@@ -1,6 +1,0 @@
-= Stock Quote CLI
-
-Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Google.
-
-
-
