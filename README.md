@@ -47,7 +47,7 @@ Get the low price for the specified stock(s) on the current day (or last trading
 
 	stock low msft dell
 
-### Historical Data
+#### Historical Data
 
 Get historical data for a single stock. The default range is 10 days. The default value is the closing price. These can be specified using the `range` (aliased to `-r`) and `value` (aliased to `-v`) options, respectively.
 
@@ -65,7 +65,9 @@ The `value` (`-v`) option takes a string. Use this to specify the price value th
 * `low` (low price)
 * `volume` (share volume)
 
-	stock history -v high fb
+Below, we fetch the high price for the Facebook stock for the past 15 days.
+
+	stock history -r 15 -v high fb
 
 ### License
 
