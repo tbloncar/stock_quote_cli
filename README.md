@@ -31,7 +31,7 @@ Get the opening price for the specified stock(s) on the current day (or last tra
 
 #### Yesterday's Closing Price
 
-Get the closing price for the specified stock(s) on the previous day (or last trading day).
+Get the closing price for the specified stock(s) on the previous trading day.
 
 	stock yclose amzn nflx
 
@@ -46,6 +46,26 @@ Get the high price for the specified stock(s) on the current day (or last tradin
 Get the low price for the specified stock(s) on the current day (or last trading day).
 
 	stock low msft dell
+
+### Historical Data
+
+Get historical data for a single stock. The default range is 10 days. The default value is the closing price. These can be specified using the `range` (aliased to `-r`) and `value` (aliased to `-v`) options, respectively.
+
+	stock history fb
+
+The `range` (`-r`) option takes an integer. Use this to specify the number of trading days for which you'd like data.
+
+	stock history -r 15 fb
+
+The `value` (`-v`) option takes a string. Use this to specify the price value that you'd like to see in the output. You can choose from the following:
+
+* `open` (opening price)
+* `close` (closing price)
+* `high` (high price)
+* `low` (low price)
+* `volume` (share volume)
+
+	stock history -v high fb
 
 ### License
 

@@ -9,6 +9,8 @@ module StockQuoteCLI
 		include StockQuoteCLI::History
 
 		DEFAULT_RANGE = 10 # days
+		DEFAULT_VALUE = "close"
+		VALUE_OPTIONS = ["open", "high", "low", "close", "volume"]
 
 		desc "last SYMBOL [SYMBOL...]", "get LAST stock price for SYMBOL"
 		def last(symbol, *symbols)
@@ -53,9 +55,13 @@ module StockQuoteCLI
 		end
 
 		desc "history SYMBOL", "get HISTORY of stock price for SYMBOL"
-		method_option "range", aliases: "-r", type: :numeric, default: DEFAULT_RANGE, desc: "Specify the number of days for which to return stock price information."
+		method_option "range", aliases: "-r", type: :numeric, default: DEFAULT_RANGE, desc: "Specify the number of trading days for which to return stock price information."
+		method_option "value", aliases: "-v", type: :string, default: DEFAULT_VALUE, desc: "Specify the stock price value to retrieve for each date."
 		def history(symbol)
 			stock_history = get_stock_history(symbol)
+			trimmed_stock_history = trim_stock_history(stock_history, options['range'])
+			value = options['value']
+			output_history_messages(trimmed_stock_history, value, VALUE_OPTIONS, symbol)
 		end
 
 		private
@@ -64,10 +70,13 @@ module StockQuoteCLI
 			puts
 			stocks.each do |stock|
 				if stock.response_code == 200
+					company = format_company(stock.company)
 					unless method_name == :volume
-						puts "#{stock.company.green.rjust(40)}: $#{stock.send(method_name).number_with_commas}"
+						price = format_price(stock.send(method_name))
+						puts "#{company}: #{price}"
 					else
-						puts "#{stock.company.green.rjust(40)}: #{stock.send(method_name).number_with_commas} shares"
+						volume = format_volume(stock.send(method_name))
+						puts "#{company}: #{volume}"
 					end
 				else
 					puts bad_symbol_message(stock.symbol)
@@ -76,13 +85,62 @@ module StockQuoteCLI
 			puts
 		end
 
+		def output_history_messages(stock_history, method_name, method_options, symbol)
+			puts 
+			unless stock_history.empty?
+				if method_options.include?(method_name)
+					puts format_title(method_name, symbol)
+					puts
+					stock_history.each do |day|
+						date = format_date(day.date)
+						unless method_name == "volume"
+							price = format_price(day.send(method_name))
+							puts "#{date}: #{price}"
+						else
+							volume = format_volume(day.send(method_name))
+							puts "#{date}: #{volume}"
+						end
+					end
+				else
+					puts bad_value_message(method_name)
+				end
+			else
+				puts bad_symbol_message(symbol)
+			end
+			puts
+		end
+
 		def bad_symbol_message(symbol)
 			"#{'No data available for:'.rjust(28)} #{symbol}".red
+		end
+
+		def bad_value_message(value_name)
+			"#{'Invalid value:'.rjust(28)} #{value_name}".red
+		end
+
+		def format_company(company)
+			company.green.rjust(40)
+		end
+
+		def format_date(date)
+			date.strftime('%m/%d/%Y').gsub("0013", "2013").green.rjust(40)
+		end
+
+		def format_price(price)
+			"$#{price.number_with_commas}"
+		end
+
+		def format_volume(volume)
+			"#{volume.number_with_commas} shares"
+		end
+
+		def format_title(method_name, symbol)
+			"#{method_name.upcase.yellow} data for".rjust(38) + ": #{symbol.upcase.yellow}"
 		end
 	end
 end
 
-class Float
+class Numeric
 	def number_with_commas
 		split_on_dot = to_s.split("\.")
 		whole = split_on_dot[0]
@@ -98,6 +156,10 @@ class Float
 		if decimal.size == 1
 			decimal = "#{decimal}0"
 		end
-		"#{whole_with_commas}.#{decimal}"
+		unless decimal == "" || decimal == "00"
+			"#{whole_with_commas}.#{decimal}"
+		else
+			"#{whole_with_commas}"
+		end
 	end
 end
