@@ -9,7 +9,7 @@ Stock Quote CLI is a Ruby gem that provides a command-line interface for fetchin
 
 ### Installation
 
-Not yet available; but eventually:
+Build passes with `ruby-2.0.0-p247`. With Ruby installed, run the following:
 
 	gem install stock_quote_cli
 
