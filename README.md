@@ -5,7 +5,12 @@ Stock Quote CLI
 
 ### Description
 
-Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Google. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
+Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Yahoo!. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
+
+Update: Due to Google's sunsetting of iGoogle (and the associated endpoint from
+which the stock_quote gem once fetched its data), the stock_quote gem has moved
+to using the Yahoo! Finance API. This CLI gem has been updated to accommodate
+the awesomely quick changes.
 
 ### Installation
 
@@ -29,7 +34,7 @@ Get the opening price for the specified stock(s) on the current day (or last tra
 
 	stock open znga
 
-#### Yesterday's Closing Price
+#### Previous Closing Price
 
 Get the closing price for the specified stock(s) on the previous trading day.
 
@@ -49,7 +54,7 @@ Get the low price for the specified stock(s) on the current day (or last trading
 
 #### Historical Data
 
-Get historical data for a single stock. The default range is 10 days. The default value is the closing price. These can be specified using the `range` (aliased to `-r`) and `value` (aliased to `-v`) options, respectively.
+Get historical data for a single stock. The default range is 14 days. The default value is the closing price. These can be specified using the `range` (aliased to `-r`) and `value` (aliased to `-v`) options, respectively.
 
 	stock history fb
 
@@ -71,7 +76,7 @@ Below, we fetch the high price for the Facebook stock for the past 15 days.
 
 ### License
 
-Copyright (c) 2013 Travis Loncar
+Copyright (c) 2014 Travis Loncar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

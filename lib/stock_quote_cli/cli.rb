@@ -8,44 +8,44 @@ module StockQuoteCLI
 		include StockQuoteCLI::Quote
 		include StockQuoteCLI::History
 
-		DEFAULT_RANGE = 10 # days
+		DEFAULT_RANGE = 14 # days
 		DEFAULT_VALUE = "close"
 		VALUE_OPTIONS = ["open", "high", "low", "close", "volume"]
 
-		desc "last SYMBOL [SYMBOL...]", "get LAST stock price for SYMBOL"
+		desc "last SYMBOL [SYMBOL...]", "get day's LAST stock price for SYMBOL"
 		def last(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			output_quote_messages(stocks, :last)
+			output_quote_messages(stocks, :last_trade_price_only)
 		end
 
-		desc "high SYMBOL [SYMBOL...]", "get HIGH stock price for SYMBOL"
+		desc "high SYMBOL [SYMBOL...]", "get day's HIGH stock price for SYMBOL"
 		def high(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			output_quote_messages(stocks, :high)
+			output_quote_messages(stocks, :days_high)
 		end
 
-		desc "low SYMBOL [SYMBOL...]", "get LOW stock price for SYMBOL"
+		desc "low SYMBOL [SYMBOL...]", "get day's LOW stock price for SYMBOL"
 		def low(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			output_quote_messages(stocks, :low)
+			output_quote_messages(stocks, :days_low)
 		end
 
-		desc "change SYMBOL [SYMBOL...]", "get CHANGE in stock price for SYMBOL"
+		desc "change SYMBOL [SYMBOL...]", "get day's CHANGE in stock price for SYMBOL"
 		def change(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
 			output_quote_messages(stocks, :change)
 		end
 
-		desc "open SYMBOL [SYMBOL...]", "get OPEN stock price for SYMBOL"
+		desc "open SYMBOL [SYMBOL...]", "get day's OPEN stock price for SYMBOL"
 		def open(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
 			output_quote_messages(stocks, :open)
 		end
 
-		desc "yclose SYMBOL [SYMBOL...]", "get yesterday's closing (YCLOSE) stock price for SYMBOL"
-		def yclose(symbol, *symbols)
+		desc "pclose SYMBOL [SYMBOL...]", "get previous closing (PCLOSE) stock price for SYMBOL"
+		def pclose(symbol, *symbols)
 			stocks = stocks(symbol, symbols)
-			output_quote_messages(stocks, :y_close)
+			output_quote_messages(stocks, :previous_close)
 		end
 
 		desc "volume SYMBOL [SYMBOL...]", "get share VOLUME for SYMBOL"
@@ -58,10 +58,9 @@ module StockQuoteCLI
 		method_option "range", aliases: "-r", type: :numeric, default: DEFAULT_RANGE, desc: "Specify the number of trading days for which to return stock price information."
 		method_option "value", aliases: "-v", type: :string, default: DEFAULT_VALUE, desc: "Specify the stock price value to retrieve for each date."
 		def history(symbol)
-			stock_history = get_stock_history(symbol)
-			trimmed_stock_history = trim_stock_history(stock_history, options['range'])
+			stock_history = get_stock_history(symbol, options['range'])
 			value = options['value']
-			output_history_messages(trimmed_stock_history, value, VALUE_OPTIONS, symbol)
+			output_history_messages(stock_history, value, VALUE_OPTIONS, symbol)
 		end
 
 		private
@@ -70,12 +69,12 @@ module StockQuoteCLI
 			puts
 			stocks.each do |stock|
 				if stock.response_code == 200
-					company = format_company(stock.company)
+					company = format_company(stock.name)
 					unless method_name == :volume
 						price = format_price(stock.send(method_name))
 						puts "#{company}: #{price}"
 					else
-						volume = format_volume(stock.send(method_name))
+						volume = format_volume(stock.volume)
 						puts "#{company}: #{volume}"
 					end
 				else
@@ -123,7 +122,7 @@ module StockQuoteCLI
 		end
 
 		def format_date(date)
-			date.strftime('%m/%d/%Y').gsub("0013", "2013").green.rjust(40)
+			date.green.rjust(40)
 		end
 
 		def format_price(price)
