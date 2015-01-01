@@ -78,7 +78,7 @@ module StockQuoteCLI
 						puts "#{company}: #{volume}"
 					end
 				else
-					puts bad_symbol_message(stock.symbol)
+					puts bad_symbol_message
 				end
 			end
 			puts
@@ -86,7 +86,9 @@ module StockQuoteCLI
 
 		def output_history_messages(stock_history, method_name, method_options, symbol)
 			puts 
-			unless stock_history.empty?
+			if stock_history.is_a?(StockQuote::NoDataForStockError)
+				puts bad_symbol_message
+			else
 				if method_options.include?(method_name)
 					puts format_title(method_name, symbol)
 					puts
@@ -103,14 +105,12 @@ module StockQuoteCLI
 				else
 					puts bad_value_message(method_name)
 				end
-			else
-				puts bad_symbol_message(symbol)
 			end
 			puts
 		end
 
-		def bad_symbol_message(symbol)
-			TextHelpers.red("#{'No data available for:'.rjust(28)} #{symbol}")
+		def bad_symbol_message
+			TextHelpers.red('No data available for symbol...'.rjust(28))
 		end
 
 		def bad_value_message(value_name)
