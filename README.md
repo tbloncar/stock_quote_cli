@@ -7,6 +7,8 @@ Stock Quote CLI
 
 Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Yahoo!. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
 
+![Example](https://raw.githubusercontent.com/tbloncar/stock_quote_cli/master/example.png)
+
 Update: Due to Google's sunsetting of iGoogle (and the associated endpoint from
 which the stock_quote gem once fetched its data), the stock_quote gem has moved
 to using the Yahoo! Finance API. This CLI gem has been updated to accommodate
