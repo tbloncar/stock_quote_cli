@@ -110,19 +110,19 @@ module StockQuoteCLI
 		end
 
 		def bad_symbol_message(symbol)
-			"#{'No data available for:'.rjust(28)} #{symbol}".red
+			TextHelpers.red("#{'No data available for:'.rjust(28)} #{symbol}")
 		end
 
 		def bad_value_message(value_name)
-			"#{'Invalid value:'.rjust(28)} #{value_name}".red
+			TextHelpers.red("#{'Invalid value:'.rjust(28)} #{value_name}")
 		end
 
 		def format_company(company)
-			company.green.rjust(40)
+			TextHelpers.green(company).rjust(40)
 		end
 
 		def format_date(date)
-			date.green.rjust(40)
+			TextHelpers.green(date).rjust(40)
 		end
 
 		def format_price(price)
@@ -134,7 +134,7 @@ module StockQuoteCLI
 		end
 
 		def format_title(method_name, symbol)
-			"#{method_name.upcase.yellow} data for".rjust(38) + ": #{symbol.upcase.yellow}"
+			"#{TextHelpers.yellow(method_name.upcase)} data for".rjust(38) + ": #{TextHelpers.yellow(symbol.upcase)}"
 		end
 	end
 end
