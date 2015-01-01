@@ -16,7 +16,7 @@ the awesomely quick changes.
 
 ### Installation
 
-Build passes with `ruby-2.0.0-p247`. With Ruby installed, run the following:
+Build passes with `ruby-2.1.1` and `ruby-2.2.0`. With Ruby installed, run the following:
 
 	gem install stock_quote_cli
 
