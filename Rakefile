@@ -22,8 +22,6 @@ Jeweler::Tasks.new do |gem|
   gem.email = "loncar.travis@gmail.com"
   gem.authors = ["Travis Loncar"]
   # dependencies defined in Gemfile
-  gem.add_dependency "thor", "~> 0.18.1"
-  gem.add_dependency "stock_quote", "~> 1.1.0"
 end
 Jeweler::RubygemsDotOrgTasks.new
 

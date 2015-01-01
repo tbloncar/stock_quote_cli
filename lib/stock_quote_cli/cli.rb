@@ -91,7 +91,7 @@ module StockQuoteCLI
 					puts format_title(method_name, symbol)
 					puts
 					stock_history.each do |day|
-						date = format_date(day.date)
+						date = format_date(day.date.to_s)
 						unless method_name == "volume"
 							price = format_price(day.send(method_name))
 							puts "#{date}: #{price}"
