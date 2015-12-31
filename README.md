@@ -7,7 +7,7 @@ Stock Quote CLI
 
 Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Yahoo!. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
 
-![Example](https://raw.githubusercontent.com/tbloncar/stock_quote_cli/master/example.png)
+![Demo](https://raw.githubusercontent.com/tbloncar/stock_quote_cli/master/demo.gif)
 
 Update: Due to Google's sunsetting of iGoogle (and the associated endpoint from
 which the stock_quote gem once fetched its data), the stock_quote gem has moved
@@ -16,9 +16,11 @@ the awesomely quick changes.
 
 ### Installation
 
-Build passes with `ruby-2.1.1` and `ruby-2.2.0`. With Ruby installed, run the following:
+With Ruby installed, run the following:
 
-	gem install stock_quote_cli
+```
+gem install stock_quote_cli
+```
 
 ### Usage Details
 
@@ -28,41 +30,55 @@ You can use Stock Quote CLI to fetch real-time attributes of multiple stocks. Us
 
 Get the latest price for the specified stock(s).
 
-	stock last goog yhoo aapl
+```
+stock last goog yhoo aapl
+```
 
 #### Open Price
 
 Get the opening price for the specified stock(s) on the current day (or last trading day).
 
-	stock open znga
+```
+stock open znga
+```
 
 #### Previous Closing Price
 
 Get the closing price for the specified stock(s) on the previous trading day.
 
-	stock yclose amzn nflx
+```
+stock yclose amzn nflx
+```
 
 #### High Price
 
 Get the high price for the specified stock(s) on the current day (or last trading day).
 
-	stock high lnkd
+```
+stock high lnkd
+```
 
 #### Low Price
 
 Get the low price for the specified stock(s) on the current day (or last trading day).
 
-	stock low msft dell
+```
+stock low msft dell
+```
 
 #### Historical Data
 
 Get historical data for a single stock. The default range is 14 days. The default value is the closing price. These can be specified using the `range` (aliased to `-r`) and `value` (aliased to `-v`) options, respectively.
 
-	stock history fb
+```
+stock history fb
+```
 
 The `range` (`-r`) option takes an integer. Use this to specify the number of trading days for which you'd like data.
 
-	stock history -r 15 fb
+```
+stock history -r 15 fb
+```
 
 The `value` (`-v`) option takes a string. Use this to specify the price value that you'd like to see in the output. You can choose from the following:
 
@@ -74,7 +90,9 @@ The `value` (`-v`) option takes a string. Use this to specify the price value th
 
 Below, we fetch the high price for the Facebook stock for the past 15 days.
 
-	stock history -r 15 -v high fb
+```
+stock history -r 15 -v high fb
+```
 
 ### License
 
