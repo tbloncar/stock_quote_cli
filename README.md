@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/tbloncar/stock_quote_cli.png?branch=master)](https://travis-ci.org/tbloncar/stock_quote_cli)
 
-### Description
-
 Stock Quote CLI is a Ruby gem that provides a command-line interface for fetching stock information from Yahoo!. It relies on the [stock_quote gem](https://github.com/tyrauber/stock_quote) for fetching real-time and historical data.
 
 ![Demo](https://raw.githubusercontent.com/tbloncar/stock_quote_cli/master/demo.gif)
@@ -21,7 +19,7 @@ With Ruby installed, run the following:
 gem install stock_quote_cli
 ```
 
-### Usage Details
+### Usage
 
 You can use Stock Quote CLI to fetch real-time attributes of multiple stocks. Use the `stock` command in tandem with any of the available subcommands and stock symbols to fetch the relevant attribute(s).
 
