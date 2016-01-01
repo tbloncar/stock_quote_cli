@@ -1,5 +1,4 @@
-Stock Quote CLI
-===============
+## Stock Quote CLI
 
 [![Build Status](https://travis-ci.org/tbloncar/stock_quote_cli.png?branch=master)](https://travis-ci.org/tbloncar/stock_quote_cli)
 
@@ -96,7 +95,7 @@ stock history -r 15 -v high fb
 
 ### License
 
-Copyright (c) 2015 Travis Loncar
+Copyright (c) 2016 Travis Loncar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Travis Loncar"]
-  s.date = "2015-01-01"
+  s.date = "2016-01-01"
   s.description = "A Ruby gem that provides a command-line interface for fetching stock information."
   s.email = "loncar.travis@gmail.com"
   s.executables = ["stock"]
@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
     "README.md"
   ]
   s.files = [
-    ".document",
     ".rspec",
     ".travis.yml",
     "Gemfile",
@@ -30,18 +29,19 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/stock",
-    "example.png",
+    "demo.gif",
     "lib/stock_quote_cli.rb",
+    "lib/stock_quote_cli/api.rb",
     "lib/stock_quote_cli/cli.rb",
-    "lib/stock_quote_cli/history.rb",
-    "lib/stock_quote_cli/quote.rb",
+    "lib/stock_quote_cli/text.rb",
+    "lib/stock_quote_cli/version.rb",
     "spec/spec_helper.rb",
     "spec/stock_quote_cli_spec.rb",
     "stock_quote_cli.gemspec"
   ]
   s.homepage = "http://github.com/tbloncar/stock_quote_cli"
   s.licenses = ["MIT"]
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.4.8"
   s.summary = "A Ruby gem that provides a command-line interface for fetching stock information."
 
   if s.respond_to? :specification_version then

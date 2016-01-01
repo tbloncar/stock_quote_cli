@@ -1,164 +1,124 @@
 require "thor"
 require "stock_quote"
-require "stock_quote_cli/quote"
-require "stock_quote_cli/history"
 
 module StockQuoteCLI
   class CLI < Thor
-    include StockQuoteCLI::Quote
-    include StockQuoteCLI::History
-
-    DEFAULT_RANGE = 14 # days
-    DEFAULT_VALUE = "close"
-    VALUE_OPTIONS = ["open", "high", "low", "close", "volume"]
-
     desc "last SYMBOL [SYMBOL...]", "get day's LAST stock price for SYMBOL"
-    def last(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :last_trade_price_only)
+    def last(*symbols)
+      output_info(symbols, :last_trade_price_only)
     end
 
     desc "high SYMBOL [SYMBOL...]", "get day's HIGH stock price for SYMBOL"
-    def high(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :days_high)
+    def high(*symbols)
+      output_info(symbols, :days_high)
     end
 
     desc "low SYMBOL [SYMBOL...]", "get day's LOW stock price for SYMBOL"
-    def low(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :days_low)
+    def low(*symbols)
+      output_info(symbols, :days_low)
     end
 
     desc "change SYMBOL [SYMBOL...]", "get day's CHANGE in stock price for SYMBOL"
-    def change(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :change)
+    def change(*symbols)
+      output_info(symbols, :change)
     end
 
     desc "open SYMBOL [SYMBOL...]", "get day's OPEN stock price for SYMBOL"
-    def open(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :open)
+    def open(*symbols)
+      output_info(symbols, :open)
     end
 
     desc "pclose SYMBOL [SYMBOL...]", "get previous closing (PCLOSE) stock price for SYMBOL"
-    def pclose(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :previous_close)
+    def pclose(*symbols)
+      output_info(symbols, :previous_close)
     end
 
     desc "volume SYMBOL [SYMBOL...]", "get share VOLUME for SYMBOL"
-    def volume(symbol, *symbols)
-      stocks = stocks(symbol, symbols)
-      output_quote_messages(stocks, :volume)
+    def volume(*symbols)
+      output_info(symbols, :volume)
     end
 
     desc "history SYMBOL", "get HISTORY of stock price for SYMBOL"
-    method_option "range", aliases: "-r", type: :numeric, default: DEFAULT_RANGE, desc: "Specify the number of trading days for which to return stock price information."
-    method_option "value", aliases: "-v", type: :string, default: DEFAULT_VALUE, desc: "Specify the stock price value to retrieve for each date."
+    method_option "range", aliases: "-r", type: :numeric, default: 14, desc: "Specify the number of trading days for which to return stock price information."
+    method_option "value", aliases: "-v", type: :string, default: "close", desc: "Specify the stock price value to retrieve for each date."
     def history(symbol)
-      stock_history = get_stock_history(symbol, options['range'])
-      value = options['value']
-      output_history_messages(stock_history, value, VALUE_OPTIONS, symbol)
+      history = API.stock_history(symbol, options['range'])
+      output_stock_history(history, options['value'], symbol)
     end
 
     private
 
-    def output_quote_messages(stocks, method_name)
+    def output_info(symbols, vname)
+      stocks = API.stocks_info(symbols)
+      output_stocks_info(stocks, vname)
+    end
+
+    def output_stocks_info(stocks, vname)
       puts
-      stocks.each do |stock|
-        if stock.response_code == 200
-          company = format_company(stock.name)
-          unless method_name == :volume
-            price = format_price(stock.send(method_name))
-            puts "#{company}: #{price}"
+      stocks.each do |quote|
+        # Ensure that quote object has data. If not,
+        # it probably represents an invalid symbol.
+        if quote.open
+          company = format_company(quote.name)
+          if vname == :volume
+            puts "#{company}: #{format_volume(quote.volume)}"
           else
-            volume = format_volume(stock.volume)
-            puts "#{company}: #{volume}"
+            puts "#{company}: #{format_price(quote.send(vname))}"
           end
         else
-          puts bad_symbol_message
+          output_bad_symbol_message(quote.symbol)
         end
       end
       puts
     end
 
-    def output_history_messages(stock_history, method_name, method_options, symbol)
-      puts 
-      if stock_history.is_a?(StockQuote::NoDataForStockError)
-        puts bad_symbol_message
+    def output_stock_history(history, vname, symbol)
+      return output_bad_symbol_message(symbol) if history.is_a?(StockQuote::NoDataForStockError)
+
+      voptions = %w[open high low close volume]
+      if voptions.include?(vname)
+        puts "\n#{format_title(vname, symbol)}\n"
+        history.each do |quote|
+          date = format_date(quote.date.to_s)
+          if vname == "volume"
+            puts "#{date}: #{format_volume(quote.send(vname))}"
+          else
+            puts "#{date}: #{format_price(quote.send(vname))}"
+          end
+        end
       else
-        if method_options.include?(method_name)
-          puts format_title(method_name, symbol)
-          puts
-          stock_history.each do |day|
-            date = format_date(day.date.to_s)
-            unless method_name == "volume"
-              price = format_price(day.send(method_name))
-              puts "#{date}: #{price}"
-            else
-              volume = format_volume(day.send(method_name))
-              puts "#{date}: #{volume}"
-            end
-          end
-        else
-          puts bad_value_message(method_name)
-        end
+        output_bad_vname_message(vname)
       end
       puts
     end
 
-    def bad_symbol_message
-      TextHelpers.red('No data available for symbol...'.rjust(28))
+    def output_bad_symbol_message(symbol)
+      puts Text.red("No data available for symbol: #{symbol.upcase}".rjust(28))
     end
 
-    def bad_value_message(value_name)
-      TextHelpers.red("#{'Invalid value:'.rjust(28)} #{value_name}")
+    def output_bad_vname_message(vname)
+      puts Text.red("#{'Invalid value:'.rjust(28)} #{vname}")
     end
 
     def format_company(company)
-      TextHelpers.green(company).rjust(40)
+      Text.green(company).rjust(40)
     end
 
     def format_date(date)
-      TextHelpers.green(date).rjust(40)
+      Text.green(date).rjust(40)
     end
 
     def format_price(price)
-      "$#{price.number_with_commas}"
+      "$#{Text.number_with_commas(price)}"
     end
 
     def format_volume(volume)
-      "#{volume.number_with_commas} shares"
+      "#{Text.number_with_commas(volume.to_i)} shares"
     end
 
-    def format_title(method_name, symbol)
-      "#{TextHelpers.yellow(method_name.upcase)} data for".rjust(38) + ": #{TextHelpers.yellow(symbol.upcase)}"
-    end
-  end
-end
-
-class Numeric
-  def number_with_commas
-    split_on_dot = to_s.split("\.")
-    whole = split_on_dot[0]
-    decimal = split_on_dot[1] || ""
-    char_array = whole.reverse.split(//)
-    whole_with_commas = char_array.each_with_index.map do |char, i|
-      if char_array.size > 3 && i % 3 == 0 && i > 0
-        "#{char},"
-      else
-        char
-      end
-    end.reverse.join("")
-    if decimal.size == 1
-      decimal = "#{decimal}0"
-    end
-    unless decimal == "" || decimal == "00"
-      "#{whole_with_commas}.#{decimal}"
-    else
-      "#{whole_with_commas}"
+    def format_title(vname, symbol)
+      "#{Text.yellow(vname.upcase)} data for:".rjust(39) +
+        " #{Text.yellow(symbol.upcase)}\n"
     end
   end
 end
